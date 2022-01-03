@@ -1,5 +1,9 @@
 # karutaWalk (府中かるたさんぽ)
 
+<img src="sample.png" width="50%">  
+
+※地図出典: [©OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
+
 ## 目的
 * [Leaflet](https://leafletjs.com/)を使うとWebサイト上に地図を簡単に埋め込むことができることを知ったので、その習作として作ってみました。
 
