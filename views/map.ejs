@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+		<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+		<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+		<title><%= title %></title>
+	</head>
+	<body>
+		<ons-page>
+			<ons-toolbar>
+				<div class="center"><%= title %></div>
+			</ons-toolbar>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div id="map" class="text-center"></div>
+					</div>
+				</div>
+			</div>
+		</ons-page>
+		<script>
+			const map = L.map('map', { closePopupOnClick: false }).setView(['<%= karutaLat %>', '<%= karutaLng %>'], 5);
+			const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA</a>',
+				maxZoom: 19
+			});
+			tileLayer.addTo(map);
+
+			const markerPlaces = [
+				{
+					name: '①【出発地点】<%= depName %>',
+					lat: '<%= depLat %>',
+					lng: '<%= depLng %>'
+				},
+				{
+					name: '③【到着地点】<%= arrName %>',
+					lat: '<%= arrLat %>',
+					lng: '<%= arrLng %>'
+				},
+				{
+					name: '②【かるた】<%= karutaName %>',
+					lat: '<%= karutaLat %>',
+					lng: '<%= karutaLng %>'
+				}
+			];
+			const mapMarkers = L.featureGroup();
+			for(let idx = 0; idx < markerPlaces.length; ++ idx){
+				mapMarkers.addLayer(
+					L.marker([markerPlaces[idx].lat, markerPlaces[idx].lng])
+						.addTo(map)
+						.bindPopup(markerPlaces[idx].name, { autoClose: false })
+						.openPopup()
+				);
+			}
+			map.fitBounds(mapMarkers.getBounds());
+
+			L.Routing.control({
+				waypoints: [
+					L.latLng('<%= depLat %>', '<%= depLng %>'),
+					L.latLng('<%= karutaLat %>', '<%= karutaLng %>')
+				],
+				plan: L.Routing.plan([
+					L.latLng('<%= depLat %>', '<%= depLng %>'),
+					L.latLng('<%= karutaLat %>', '<%= karutaLng %>')
+				], {
+					draggableWaypoints: false,
+					addWaypoints: false
+				}),
+				router: new L.Routing.OSRMv1({
+					profile: 'foot'
+				}),
+				show: false
+			}).addTo(map);
+
+			L.Routing.control({
+				waypoints: [
+					L.latLng('<%= karutaLat %>', '<%= karutaLng %>'),
+					L.latLng('<%= arrLat %>', '<%= arrLng %>')
+				],
+				plan: L.Routing.plan([
+					L.latLng('<%= karutaLat %>', '<%= karutaLng %>'),
+					L.latLng('<%= arrLat %>', '<%= arrLng %>')
+				], {
+					draggableWaypoints: false,
+					addWaypoints: false
+				}),
+				router: new L.Routing.OSRMv1({
+					profile: 'foot'
+				}),
+				show: false
+			}).addTo(map);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+		<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+		<title><%= title %></title>
+	</head>
+	<body>
+		<ons-page>
+			<ons-toolbar>
+				<div class="center"><%= title %></div>
+			</ons-toolbar>
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<form role="form" action="/map" method="post">
+							<div class="form-group mt-5 mb-5">
+								<label for="depStation">出発駅</label>
+								<select class="form-control" name="depStation" id="depStation">
+									<% for(const stationInfo of stationsList){ %>
+										<option value="<%= stationInfo.name %>,<%= stationInfo.lat %>,<%= stationInfo.lng %>"><%= stationInfo.name %></option>
+									<% } %>
+								</select>
+							</div>
+							<div class="form-group mb-5">
+								<label for="arrStation">到着駅</label>
+								<select class="form-control" name="arrStation" id="arrStation">
+									<% for(const stationInfo of stationsList){ %>
+										<option value="<%= stationInfo.name %>,<%= stationInfo.lat %>,<%= stationInfo.lng %>"><%= stationInfo.name %></option>
+									<% } %>
+								</select>
+							</div>
+							<div class="form-group mb-5">
+								<label for="karuta">かるた</label>
+								<select class="form-control" name="karuta" id="karuta">
+									<% for(const karutaInfo of karutaList){ %>
+										<option value="<%= karutaInfo.name %>,<%= karutaInfo.lat %>,<%= karutaInfo.lng %>"><%= karutaInfo.id %>:【<%= karutaInfo.kana %>】<%= karutaInfo.name %> (<%= karutaInfo.address %>)</option>
+									<% } %>
+								</select>
+							</div>
+							<div class="form-group mt-5 text-center">
+								<input class="btn btn-primary" type="submit" value="表示">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</ons-page>
+	</body>
+</html>
